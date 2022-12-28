@@ -9,6 +9,8 @@
 #include <cmath>
 using namespace std;
 
+#define EMPTY_PAGE -1
+
 int no_frames = 0; // number of frames
 int no_items = 0; // number of items in the sequence 
 
@@ -21,6 +23,7 @@ void illustrate_LRU(int *Seq, int frames, int pages);
 int main()
 {
     int choice;
+    enum input_choices {DEFAULT_INPUT_CHOICE = 1, MANUAL_INPUT_CHOICE};
     // start-up interface
     cout << "\n--- Page Replacement algorithm ---";
     cout << "\n1. Default referenced sequence";
@@ -28,7 +31,7 @@ int main()
     do {
         cout << "\nYour choice (1 or 2): ";
         cin >> choice;
-    } while (choice != 1 && choice != 2);
+    } while (choice != DEFAULT_INPUT_CHOICE && choice != MANUAL_INPUT_CHOICE);
 
     do {
         cout << "\nInput number of page frames (> 0): ";
@@ -37,15 +40,16 @@ int main()
 
     // create sequence 
     int *seq = NULL;
-    if (choice == 1)
+    if (choice == DEFAULT_INPUT_CHOICE)
     {
         seq = create_default_seq();
     }
-    else if (choice == 2)
+    else if (choice == MANUAL_INPUT_CHOICE)
     {
         seq = manual_input();
     }
 
+    enum algo_choices {FIFO_CHOICE = 1, OPT_CHOICE, LRU_CHOICE};
     // choose algorithm 
     cout << "\n1. FIFO algorithm";
     cout << "\n2. OPT algorithm";
@@ -60,15 +64,15 @@ int main()
     cout << "\nReference sequence: ";
     for (int i = 0; i < no_items; i++)
         cout << seq[i] << " ";
-    if (choice == 1)
+    if (choice == FIFO_CHOICE)
     {
         illustrate_FIFO(seq, no_frames, no_items);
     }
-    else if (choice == 2)
+    else if (choice == OPT_CHOICE)
     {
         illustrate_OPT(seq, no_frames, no_items);
     }
-    else if (choice == 3)
+    else if (choice == LRU_CHOICE)
     {
         illustrate_LRU(seq, no_frames, no_items);
     }
@@ -158,7 +162,7 @@ void illustrate_FIFO(int *Seq, int frames, int pages)
     cout << "Page Fault" << endl;
 
     // initialize 
-    for (int i = 0; i < frames; i++) temp[i] = -1;
+    for (int i = 0; i < frames; i++) temp[i] = EMPTY_PAGE;
     for (int i = 0; i < pages; i++)
     {
         int t = 0;
@@ -178,7 +182,7 @@ void illustrate_FIFO(int *Seq, int frames, int pages)
         cout << Seq[i] << "\t";
         for (int i = 0; i < frames; i++)
         {
-            if (temp[i] != -1) cout << temp[i] << "\t";
+            if (temp[i] != EMPTY_PAGE) cout << temp[i] << "\t";
             else cout << "-\t";
         }
         if (check) cout << "Yes" << endl;
@@ -204,7 +208,7 @@ void illustrate_LRU(int *Seq, int frames, int pages)
     cout<<"Page Fault"<<endl;
     for (int i = 0; i < frames; i++)
     {
-        temp[i] = -1;
+        temp[i] = EMPTY_PAGE;
         state[i] = -1;
     }
     for (int i = 0; i < pages; i++)
@@ -233,7 +237,7 @@ void illustrate_LRU(int *Seq, int frames, int pages)
         else for (int j = 0; j < frames; j++) if (temp[j] == Seq[i]) state[j] = i;
         for (int i = 0; i < frames; i++)
         {
-            if (temp[i] != -1) cout << temp[i] << "\t";
+            if (temp[i] != EMPTY_PAGE) cout << temp[i] << "\t";
             else cout << "-\t";
         }
         if (check) cout<<"Yes"<<endl;
