@@ -9,8 +9,8 @@
 #include <cmath>
 using namespace std;
 
-int no_frames; // number of frames
-int no_items; // number of items in the sequence 
+int no_frames = 0; // number of frames
+int no_items = 0; // number of items in the sequence 
 
 int* manual_input();
 int* create_default_seq();
@@ -75,6 +75,7 @@ int main()
     return 0;
 }
 
+
 int* manual_input()
 {
     // input number of items in the sequence
@@ -110,6 +111,7 @@ int* manual_input()
     return seq;
 }
 
+
 int* create_default_seq()
 {
     int *seq = NULL;
@@ -119,14 +121,14 @@ int* create_default_seq()
     cin >> studentID;
     studentID += "007";
 
-    // parse items in student ID string and create sequence
+    // parse items from studentID string and create sequence
     no_items = studentID.length();
     seq = new int[no_items];
     int ctoi_value = 0;
     for (int i = 0; i < no_items; i++)
     {
         ctoi_value = studentID[i] - '0';
-        // invalid char
+        // invalid digit
         if (ctoi_value < 0 || ctoi_value > 9) 
         {
             cout << "\nError: Invalid digit, cannot convert char '" << studentID[i] << "' to int. End parsing...";
@@ -140,6 +142,7 @@ int* create_default_seq()
     return seq;
 }
 
+
 void illustrate_FIFO(int *Seq, int frames, int pages)
 {
     cout << "\nFIFO algorithm\n";
@@ -150,10 +153,11 @@ void illustrate_FIFO(int *Seq, int frames, int pages)
     cout<<"Page\t";
     for (int i = 0; i < frames; i++)
     {
-        cout<<"Frame "<<i+1<<"\t";
+        cout << "Frame " << i+1 << "\t";
     }
-    cout<<"Page Fault"<<endl;
+    cout << "Page Fault" << endl;
 
+    // initialize 
     for (int i = 0; i < frames; i++) temp[i] = -1;
     for (int i = 0; i < pages; i++)
     {
@@ -171,17 +175,18 @@ void illustrate_FIFO(int *Seq, int frames, int pages)
             check = true;
             pagefaults++;
         }
-        cout<<Seq[i]<<"\t";
+        cout << Seq[i] << "\t";
         for (int i = 0; i < frames; i++)
         {
-            if(temp[i] != -1) cout<<temp[i]<<"\t";
-            else cout<<"-\t";
+            if (temp[i] != -1) cout << temp[i] << "\t";
+            else cout << "-\t";
         }
-        if (check) cout<<"Yes"<<endl;
-        else cout<<"No"<<endl;
+        if (check) cout << "Yes" << endl;
+        else cout << "No" << endl;
     }
-    cout<<"The number of pagefaults: "<<pagefaults;
+    cout << "The number of pagefaults: " << pagefaults;
 }
+
 
 void illustrate_LRU(int *Seq, int frames, int pages)
 {
@@ -228,14 +233,15 @@ void illustrate_LRU(int *Seq, int frames, int pages)
         else for (int j = 0; j < frames; j++) if (temp[j] == Seq[i]) state[j] = i;
         for (int i = 0; i < frames; i++)
         {
-            if(temp[i] != -1) cout<<temp[i]<<"\t";
-            else cout<<"-\t";
+            if (temp[i] != -1) cout << temp[i] << "\t";
+            else cout << "-\t";
         }
         if (check) cout<<"Yes"<<endl;
         else cout<<"No"<<endl;
     }
     cout<<"The number of pagefaults: "<<pagefaults;
 }
+
 
 void illustrate_OPT(int *Seq, int frames, int pages)
 {
