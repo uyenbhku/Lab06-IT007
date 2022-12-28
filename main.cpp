@@ -147,6 +147,7 @@ int* create_default_seq()
 }
 
 
+// @author: Nguyen Nguyen Giap 
 void illustrate_FIFO(int *Seq, int frames, int pages)
 {
     cout << "\nFIFO algorithm\n";
@@ -192,6 +193,7 @@ void illustrate_FIFO(int *Seq, int frames, int pages)
 }
 
 
+// @author: Nguyen Nguyen Giap 
 void illustrate_LRU(int *Seq, int frames, int pages)
 {
     cout << "\nLRU algorithm\n";
