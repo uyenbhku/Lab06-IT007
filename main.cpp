@@ -1,7 +1,7 @@
 /*
  * Team: WINter
  * Course: IT007.N11
- * File: LRU.cpp
+ * File: Lab6
  */
 
 #include <iostream>
