@@ -55,7 +55,7 @@ int main()
         cin >> choice;
     } while (choice < 1 || choice > 3);
 
-    system("cls");
+    //system("cls");
     cout << "\n--- Page Replacement algorithm ---";
     cout << "\nReference sequence: ";
     for (int i = 0; i < no_items; i++)
@@ -89,20 +89,20 @@ int* manual_input()
     float temp; 
     for (int i = 0; i < no_items; i++)
     {
-        // make sure all items in seq is unsigned int 
+        // make sure all items in seq are unsigned int 
         do {
             cin >> temp;
             if (temp < 0)
             {
-                cout << "\nError: value must be UNSIGNED INT! Error value = " << temp;
+                cout << "\nError: value must be UNSIGNED INT!";
             }
             else if (temp != round(temp))
             {
-                cout << "\nError: value must be UNSIGNED INT! Error value = " << temp;
+                cout << "\nError: value must be UNSIGNED INT!";
             }
             else 
                 break;
-            cout << "\nIgnore value\n";
+            cout << "\nIgnore value " << temp << endl;
         } while (true);
         seq[i] = temp;
     }
@@ -122,9 +122,19 @@ int* create_default_seq()
     // parse items in student ID string and create sequence
     no_items = studentID.length();
     seq = new int[no_items];
+    int ctoi_value = 0;
     for (int i = 0; i < no_items; i++)
     {
-        seq[i] = studentID[i] - '0'; // convert char to int
+        ctoi_value = studentID[i] - '0';
+        // invalid char
+        if (ctoi_value < 0 || ctoi_value > 9) 
+        {
+            cout << "\nError: Invalid digit, cannot convert char '" << studentID[i] << "' to int. End parsing...";
+            no_items = i;
+            cout << "\nNew number of items: " << no_items << endl;
+            break;
+        } 
+        seq[i] = ctoi_value; // convert char to int
     }
 
     return seq;
