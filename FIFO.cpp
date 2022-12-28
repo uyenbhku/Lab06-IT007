@@ -12,7 +12,14 @@ int main()
     cout<<"Enter frame: "; cin>>frames;
     int temp[frames];
     int pagefaults = 0, index = 0;
-    cout<<"Page\tFrame 1\tFrame 2\tFrame 3\tPage Fault"<<endl;
+
+    cout<<"Page\t";
+    for (int i = 0; i < frames; i++)
+    {
+        cout<<"Frame "<<i+1<<"\t";
+    }
+    
+    cout<<"Page Fault"<<endl;
     for (int i = 0; i < frames; i++) temp[i] = -1;
     for (int i = 0; i < pages; i++)
     {

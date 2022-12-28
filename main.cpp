@@ -133,9 +133,17 @@ int* create_default_seq()
 void illustrate_FIFO(int *Seq, int frames, int pages)
 {
     cout << "\nFIFO algorithm\n";
+
     int temp[frames];
     int pagefaults = 0, index = 0;
-    cout<<"Page\tFrame 1\tFrame 2\tFrame 3\tPage Fault"<<endl;
+
+    cout<<"Page\t";
+    for (int i = 0; i < frames; i++)
+    {
+        cout<<"Frame "<<i+1<<"\t";
+    }
+    cout<<"Page Fault"<<endl;
+
     for (int i = 0; i < frames; i++) temp[i] = -1;
     for (int i = 0; i < pages; i++)
     {
@@ -168,9 +176,17 @@ void illustrate_FIFO(int *Seq, int frames, int pages)
 void illustrate_LRU(int *Seq, int frames, int pages)
 {
     cout << "\nLRU algorithm\n";
+
     int temp[frames], state[frames];
     int pagefaults = 0, index = 0;
-    cout<<"Page\tFrame 1\tFrame 2\tFrame 3\tPage Fault"<<endl;
+
+    cout<<"Page\t";
+    for (int i = 0; i < frames; i++)
+    {
+        cout<<"Frame "<<i+1<<"\t";
+    }
+    
+    cout<<"Page Fault"<<endl;
     for (int i = 0; i < frames; i++)
     {
         temp[i] = -1;
