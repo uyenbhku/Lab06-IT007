@@ -14,18 +14,20 @@ int main()
     int temp[frames], state[frames];
     int pagefaults = 0, index = 0;
 
-    cout<<"Page\t";
-    for (int i = 0; i < frames; i++)
-    {
-        cout<<"Frame "<<i+1<<"\t";
-    }
-    
-    cout<<"Page Fault"<<endl;
+    // initialize 
     for (int i = 0; i < frames; i++)
     {
         temp[i] = -1;
         state[i] = -1;
     }
+    
+    // computing and printing 
+    cout<<"Page\t";
+    for (int i = 0; i < frames; i++)
+    {
+        cout<<"Frame "<<i+1<<"\t";
+    }
+    cout<<"Page Fault"<<endl;
     for (int i = 0; i < pages; i++)
     {
         cout<<Seq[i]<<"\t";

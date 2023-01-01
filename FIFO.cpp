@@ -10,17 +10,18 @@ int main()
     for (int i = 0; i < pages; i++) cin>>Seq[i];
     int frames;
     cout<<"Enter frame: "; cin>>frames;
+    
     int temp[frames];
+    // initialize 
+    for (int i = 0; i < frames; i++) temp[i] = -1;
+    
     int pagefaults = 0, index = 0;
-
     cout<<"Page\t";
     for (int i = 0; i < frames; i++)
     {
         cout<<"Frame "<<i+1<<"\t";
     }
-    
     cout<<"Page Fault"<<endl;
-    for (int i = 0; i < frames; i++) temp[i] = -1;
     for (int i = 0; i < pages; i++)
     {
         int t = 0;

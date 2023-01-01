@@ -9,10 +9,10 @@
 #include <cmath>
 using namespace std;
 
-#define EMPTY_PAGE -1
+#define EMPTY_FRAME -1
 
 int no_frames = 0; // number of frames
-int no_items = 0; // number of items in the sequence 
+int no_pages = 0; // number of pages in the sequence 
 
 int* manual_input();
 int* create_default_seq();
@@ -38,8 +38,8 @@ int main()
         cin >> no_frames;
     } while (no_frames <= 0);
 
-    // create sequence 
-    int *seq = NULL;
+    int *seq = NULL; // page sequence 
+    // create/input sequence 
     if (choice == DEFAULT_INPUT_CHOICE)
     {
         seq = create_default_seq();
@@ -62,19 +62,19 @@ int main()
     //system("cls");
     cout << "\n--- Page Replacement algorithm ---";
     cout << "\nReference sequence: ";
-    for (int i = 0; i < no_items; i++)
+    for (int i = 0; i < no_pages; i++)
         cout << seq[i] << " ";
     if (choice == FIFO_CHOICE)
     {
-        illustrate_FIFO(seq, no_frames, no_items);
+        illustrate_FIFO(seq, no_frames, no_pages);
     }
     else if (choice == OPT_CHOICE)
     {
-        illustrate_OPT(seq, no_frames, no_items);
+        illustrate_OPT(seq, no_frames, no_pages);
     }
     else if (choice == LRU_CHOICE)
     {
-        illustrate_LRU(seq, no_frames, no_items);
+        illustrate_LRU(seq, no_frames, no_pages);
     }
     return 0;
 }
@@ -82,19 +82,19 @@ int main()
 
 int* manual_input()
 {
-    // input number of items in the sequence
+    // input number of pages in the sequence
     do {
-        cout << "\nInput number of items (>= 0): ";
-        cin >> no_items;
-    } while (no_items < 0);
+        cout << "\nInput number of pages (>= 0): ";
+        cin >> no_pages;
+    } while (no_pages < 0);
 
     // input sequence number
-    cout << "\nInput items: ";
-    int *seq = new int[no_items];
+    cout << "\nInput pages: ";
+    int *seq = new int[no_pages];
     float temp; 
-    for (int i = 0; i < no_items; i++)
+    for (int i = 0; i < no_pages; i++)
     {
-        // make sure all items in seq are unsigned int 
+        // make sure all pages in seq are unsigned int 
         do {
             cin >> temp;
             if (temp < 0)
@@ -118,27 +118,27 @@ int* manual_input()
 
 int* create_default_seq()
 {
-    int *seq = NULL;
+    int *seq = NULL; 
     // input student ID
     string studentID;
     cout << "\nInput your student ID: ";
     cin >> studentID;
     studentID += "007";
 
-    // parse items from studentID string and create sequence
-    no_items = studentID.length();
-    seq = new int[no_items];
-    int ctoi_value = 0;
-    for (int i = 0; i < no_items; i++)
+    // parse pages from studentID string and create sequence
+    no_pages = studentID.length();
+    seq = new int[no_pages];
+    int ctoi_value = 0;   // value after convert char to int
+    for (int i = 0; i < no_pages; i++)
     {
         ctoi_value = studentID[i] - '0';
-        // invalid digit
-        if (ctoi_value < 0 || ctoi_value > 9) 
+        // handle invalid digit
+        if (ctoi_value < 0 || ctoi_value > 9) // not a number 
         {
             cout << "\nError: Invalid digit, cannot convert char '" << studentID[i] << "' to int. End parsing...";
-            no_items = i;
-            cout << "\nNew number of items: " << no_items << endl;
-            break;
+            no_pages = i; // update new number of pages at where the error happened 
+            cout << "\nNew number of pages: " << no_pages << endl;
+            break; // end parsing at the time error happened 
         } 
         seq[i] = ctoi_value; // convert char to int
     }
@@ -154,16 +154,16 @@ void illustrate_FIFO(int *Seq, int frames, int pages)
 
     int temp[frames];
     int pagefaults = 0, index = 0;
+    // initialize 
+    for (int i = 0; i < frames; i++) temp[i] = EMPTY_FRAME;
 
+    // computing and printing 
     cout<<"Page\t";
     for (int i = 0; i < frames; i++)
     {
         cout << "Frame " << i+1 << "\t";
     }
     cout << "Page Fault" << endl;
-
-    // initialize 
-    for (int i = 0; i < frames; i++) temp[i] = EMPTY_PAGE;
     for (int i = 0; i < pages; i++)
     {
         int t = 0;
@@ -183,7 +183,7 @@ void illustrate_FIFO(int *Seq, int frames, int pages)
         cout << Seq[i] << "\t";
         for (int i = 0; i < frames; i++)
         {
-            if (temp[i] != EMPTY_PAGE) cout << temp[i] << "\t";
+            if (temp[i] != EMPTY_FRAME) cout << temp[i] << "\t";
             else cout << "-\t";
         }
         if (check) cout << "Yes" << endl;
@@ -200,19 +200,20 @@ void illustrate_LRU(int *Seq, int frames, int pages)
 
     int temp[frames], state[frames];
     int pagefaults = 0, index = 0;
+    // initialize 
+    for (int i = 0; i < frames; i++)
+    {
+        temp[i] = EMPTY_FRAME;
+        state[i] = -1;
+    }
 
+    // computing and printing 
     cout<<"Page\t";
     for (int i = 0; i < frames; i++)
     {
         cout<<"Frame "<<i+1<<"\t";
     }
-    
     cout<<"Page Fault"<<endl;
-    for (int i = 0; i < frames; i++)
-    {
-        temp[i] = EMPTY_PAGE;
-        state[i] = -1;
-    }
     for (int i = 0; i < pages; i++)
     {
         cout<<Seq[i]<<"\t";
@@ -239,7 +240,7 @@ void illustrate_LRU(int *Seq, int frames, int pages)
         else for (int j = 0; j < frames; j++) if (temp[j] == Seq[i]) state[j] = i;
         for (int i = 0; i < frames; i++)
         {
-            if (temp[i] != EMPTY_PAGE) cout << temp[i] << "\t";
+            if (temp[i] != EMPTY_FRAME) cout << temp[i] << "\t";
             else cout << "-\t";
         }
         if (check) cout<<"Yes"<<endl;
