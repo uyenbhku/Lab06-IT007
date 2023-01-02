@@ -17,14 +17,15 @@ int no_pages = 0; // number of pages in the sequence
 
 int* manual_input();
 int* create_default_seq();
-void illustrate_FIFO(int *Seq, int frames, int pages);
-void illustrate_OPT(int *seq, int f, int n);
-void illustrate_LRU(int *Seq, int frames, int pages);
+void illustrate_FIFO(int* Seq, int frames, int pages);
+void illustrate_OPT(int* seq, int f, int n);
+void illustrate_LRU(int* Seq, int frames, int pages);
+
 
 int main()
 {
-    int choice;
-    enum input_choices {DEFAULT_INPUT_CHOICE = 1, MANUAL_INPUT_CHOICE};
+    int choice = 0;
+    enum input_choices { DEFAULT_INPUT_CHOICE = 1, MANUAL_INPUT_CHOICE };
     // start-up interface
     cout << "\n--- Page Replacement algorithm ---";
     cout << "\n1. Default referenced sequence";
@@ -39,7 +40,7 @@ int main()
         cin >> no_frames;
     } while (no_frames <= 0);
 
-    int *seq = NULL; // page sequence 
+    int* seq = NULL; // page sequence 
     // create/input sequence 
     if (choice == DEFAULT_INPUT_CHOICE)
     {
@@ -50,7 +51,7 @@ int main()
         seq = manual_input();
     }
 
-    enum algo_choices {FIFO_CHOICE = 1, OPT_CHOICE, LRU_CHOICE};
+    enum algo_choices { FIFO_CHOICE = 1, OPT_CHOICE, LRU_CHOICE };
     // choose algorithm 
     cout << "\n1. FIFO algorithm";
     cout << "\n2. OPT algorithm";
@@ -71,9 +72,9 @@ int main()
         clock_t startT = clock(); // start time
 
         illustrate_FIFO(seq, no_frames, no_pages);
-        
+
         clock_t endT = clock(); // end time
-        cout << "\nTime executing the given test with FIFO: " << ((double)endT - startT)/CLOCKS_PER_SEC << " seconds" ;
+        cout << "\nTime executing the given test with FIFO: " << ((double)endT - startT) / CLOCKS_PER_SEC << " seconds";
 
     }
     else if (choice == OPT_CHOICE)
@@ -82,9 +83,9 @@ int main()
         clock_t startT = clock(); // start time
 
         illustrate_OPT(seq, no_frames, no_pages);
-        
+
         clock_t endT = clock(); // end time
-        cout << "\nTime executing the given test with OPT: " << ((double)endT - startT)/CLOCKS_PER_SEC << " seconds" ;
+        cout << "\nTime executing the given test with OPT: " << ((double)endT - startT) / CLOCKS_PER_SEC << " seconds";
 
     }
     else if (choice == LRU_CHOICE)
@@ -95,8 +96,10 @@ int main()
         illustrate_LRU(seq, no_frames, no_pages);
 
         clock_t endT = clock(); // end time
-        cout << "\nTime executing the given test with LRU: " << ((double)endT - startT)/CLOCKS_PER_SEC << " seconds" ;
+        cout << "\nTime executing the given test with LRU: " << ((double)endT - startT) / CLOCKS_PER_SEC << " seconds";
     }
+
+    delete[] seq;
     return 0;
 }
 
@@ -111,8 +114,8 @@ int* manual_input()
 
     // input sequence number
     cout << "\nInput reference sequence (each page is separated by a space ' '): ";
-    int *seq = new int[no_pages];
-    float temp; 
+    int* seq = new int[no_pages];
+    float temp;
     for (int i = 0; i < no_pages; i++)
     {
         // make sure all pages in seq are unsigned int 
@@ -126,11 +129,11 @@ int* manual_input()
             {
                 cout << "\nError: value must be UNSIGNED INT!";
             }
-            else 
+            else
                 break;
             cout << "\nIgnore value " << temp << endl;
         } while (true);
-        seq[i] = temp;
+        seq[i] = (int)temp;
     }
 
     return seq;
@@ -139,7 +142,7 @@ int* manual_input()
 
 int* create_default_seq()
 {
-    int *seq = NULL; 
+    int* seq = NULL;
     // input student ID
     string studentID;
     cout << "\nInput your student ID: ";
@@ -147,7 +150,7 @@ int* create_default_seq()
     studentID += "007";
 
     // parse pages from studentID string and create sequence
-    no_pages = studentID.length();
+    no_pages = (int)studentID.length();
     seq = new int[no_pages];
     int ctoi_value = 0;   // value after convert char to int
     for (int i = 0; i < no_pages; i++)
@@ -160,7 +163,7 @@ int* create_default_seq()
             no_pages = i; // update new number of pages at where the error happened 
             cout << "\nNew number of pages: " << no_pages << endl;
             break; // end parsing at the time error happened 
-        } 
+        }
         seq[i] = ctoi_value; // convert char to int
     }
 
@@ -169,20 +172,20 @@ int* create_default_seq()
 
 
 // @author: Nguyen Nguyen Giap 
-void illustrate_FIFO(int *Seq, int frames, int pages)
+void illustrate_FIFO(int* Seq, int frames, int pages)
 {
     cout << "\nFIFO algorithm\n";
 
-    int temp[frames];
+    int* temp = new int[frames];
     int pagefaults = 0, index = 0;
     // initialize 
     for (int i = 0; i < frames; i++) temp[i] = EMPTY_PAGE;
 
     // computing and printing 
-    cout<<"Page\t";
+    cout << "Page\t";
     for (int i = 0; i < frames; i++)
     {
-        cout << "Frame " << i+1 << "\t";
+        cout << "Frame " << i + 1 << "\t";
     }
     cout << "Page Fault" << endl;
     for (int i = 0; i < pages; i++)
@@ -195,7 +198,7 @@ void illustrate_FIFO(int *Seq, int frames, int pages)
             if (pagefaults < frames) temp[index++] = Seq[i];
             else
             {
-                temp[index%frames] = Seq[i];
+                temp[index % frames] = Seq[i];
                 index++;
             }
             check = true;
@@ -211,15 +214,18 @@ void illustrate_FIFO(int *Seq, int frames, int pages)
         else cout << "No" << endl;
     }
     cout << "The number of pagefaults: " << pagefaults;
+
+    delete[] temp;
 }
 
 
 // @author: Nguyen Nguyen Giap 
-void illustrate_LRU(int *Seq, int frames, int pages)
+void illustrate_LRU(int* Seq, int frames, int pages)
 {
     cout << "\nLRU algorithm\n";
 
-    int temp[frames], state[frames];
+    int* temp = new int[frames];
+    int* state = new int[frames];
     int pagefaults = 0, index = 0;
     // initialize 
     for (int i = 0; i < frames; i++)
@@ -229,15 +235,15 @@ void illustrate_LRU(int *Seq, int frames, int pages)
     }
 
     // computing and printing 
-    cout<<"Page\t";
+    cout << "Page\t";
     for (int i = 0; i < frames; i++)
     {
-        cout<<"Frame "<<i+1<<"\t";
+        cout << "Frame " << i + 1 << "\t";
     }
-    cout<<"Page Fault"<<endl;
+    cout << "Page Fault" << endl;
     for (int i = 0; i < pages; i++)
     {
-        cout<<Seq[i]<<"\t";
+        cout << Seq[i] << "\t";
         int t = 0;
         bool check = false;
         for (int j = 0; j < frames; j++) if (Seq[i] == temp[j]) t++;
@@ -264,42 +270,45 @@ void illustrate_LRU(int *Seq, int frames, int pages)
             if (temp[i] != EMPTY_PAGE) cout << temp[i] << "\t";
             else cout << "-\t";
         }
-        if (check) cout<<"Yes"<<endl;
-        else cout<<"No"<<endl;
+        if (check) cout << "Yes" << endl;
+        else cout << "No" << endl;
     }
-    cout<<"The number of pagefaults: "<<pagefaults;
+    cout << "The number of pagefaults: " << pagefaults;
+
+    delete[] temp;
+    delete[] state;
 }
 
 
 // @author: Nguyen Thi Thuy
-void illustrate_OPT(int *seq, int f, int n)
+void illustrate_OPT(int* seq, int f, int n)
 {
     cout << "\nOPT algorithm\n";
 
     // Tao mang 2 chieu = -1
-    int **table = new int*[n];
-    for(int i = 0; i < n; i++)
+    int** table = new int* [n];
+    for (int i = 0; i < n; i++)
     {
         table[i] = new int[f];
     }
     // initialize
-    for(int i = 0; i<n;i++)
+    for (int i = 0; i < n; i++)
     {
-        for(int j = 0; j < f; j++)
+        for (int j = 0; j < f; j++)
         {
             table[i][j] = EMPTY_PAGE;
         }
     }
 
-    string *page_fault = new string[n] ;// Co loi trang hay khong: Y or N
+    string* page_fault = new string[n];// Co loi trang hay khong: Y or N
 
     // computing and printing 
-    cout<<"Page\t";
+    cout << "Page\t";
     for (int i = 0; i < f; i++)
     {
-        cout<<"Frame "<<i+1<<"\t";
+        cout << "Frame " << i + 1 << "\t";
     }
-    cout<<"Page Fault"<<endl;
+    cout << "Page Fault" << endl;
 
     int i = 0;
     table[0][i] = seq[i];
@@ -311,28 +320,28 @@ void illustrate_OPT(int *seq, int f, int n)
         if (table[i][j] != EMPTY_PAGE) cout << table[i][j] << "\t";
         else cout << "-\t";
     }
-    cout<<page_fault[i]<<endl;
+    cout << page_fault[i] << endl;
 
     int no_pagefaults = 1; // dem so page faults
 
     int count_first = 1; // xu ly K frames dau tien
-    for(i=i+1; i < n; i++)
+    for (i = i + 1; i < n; i++)
     {
-        bool flag = true ;// kiem tra co xay ra loi trang hay khong
-        for(int j = 0; j < f; j++)
+        bool flag = true;// kiem tra co xay ra loi trang hay khong
+        for (int j = 0; j < f; j++)
         {
-            if(table[i-1][j] == seq[i])
+            if (table[i - 1][j] == seq[i])
             {
                 flag = false;
                 break;
             }
         }
 
-        if(flag == false) // khong xay ra loi trang thi sao chep cot cua table
+        if (flag == false) // khong xay ra loi trang thi sao chep cot cua table
         {
-            for(int j = 0; j < f; j++)
+            for (int j = 0; j < f; j++)
             {
-                table[i][j] = table[i-1][j];
+                table[i][j] = table[i - 1][j];
             }
             page_fault[i] = "No";
 
@@ -341,56 +350,56 @@ void illustrate_OPT(int *seq, int f, int n)
         {
             page_fault[i] = "Yes";
             no_pagefaults++; // cap nhat so page faults 
-            
+
             if (count_first < f) // khong can thay the trang
             {
                 table[i][count_first] = seq[i];
-                for(int j = 0; j < count_first; j++)
+                for (int j = 0; j < count_first; j++)
                 {
-                    table[i][j] = table[i-1][j];
+                    table[i][j] = table[i - 1][j];
                 }
                 count_first++;
             }
             else // Phai thay the trang
             {
                 bool flag1;  // kiem tra table[i-1][j] co duoc su dung trong tuong lai khong
-                for(int j = 0; j < f; j++)
+                for (int j = 0; j < f; j++)
                 {
                     flag1 = false;
-                    for(int k = i+1; k<n;k++)
+                    for (int k = i + 1; k < n; k++)
                     {
-                        if(seq[k] == table[i-1][j])
+                        if (seq[k] == table[i - 1][j])
                         {
                             flag1 = true;
                             break;
                         }
                     }
-                    if (flag1 == false) // khoong dung trong tuong lai nua thi chon trang nay de thay
+                    if (flag1 == false) // khong dung trong tuong lai nua thi chon trang nay de thay
                     {
-                        for(int l = 0; l < f; l++) // giu nguyen cac trang con lai
+                        for (int l = 0; l < f; l++) // giu nguyen cac trang con lai
                         {
-                            table[i][l] = table[i-1][l];
+                            table[i][l] = table[i - 1][l];
                         }
                         table[i][j] = seq[i];
                         break;
                     }
                 }
 
-                if(flag1 == true) // flag1 = false chung to chua thay trang (vi all cac page deu duoc su dung trong tuong lai,
+                if (flag1 == true) // flag1 = false chung to chua thay trang (vi all cac page deu duoc su dung trong tuong lai,
                         // di kiem page lau duoc su dung nhat
                 {
-                    for(int k = i+1; k<n;k++)
+                    for (int k = i + 1; k < n; k++)
                     {
                         int count = 0;
-                        for(int j = 0; j<f; j++)
+                        for (int j = 0; j < f; j++)
                         {
-                            if(table[i][j] == EMPTY_PAGE) count++;
+                            if (table[i][j] == EMPTY_PAGE) count++;
                         }
-                        if(count > 1)
+                        if (count > 1)
                         {
-                            for(int j = 0; j<f; j++)
+                            for (int j = 0; j < f; j++)
                             {
-                                if(table[i-1][j] == seq[k])
+                                if (table[i - 1][j] == seq[k])
                                 {
                                     table[i][j] = seq[k];
                                     break;
@@ -399,10 +408,10 @@ void illustrate_OPT(int *seq, int f, int n)
                         }
                         else
                         {
-                            for(int j = 0; j<f; j++)
+                            for (int j = 0; j < f; j++)
                             {
                                 cout << table[i][j];
-                                if(table[i][j] == EMPTY_PAGE)
+                                if (table[i][j] == EMPTY_PAGE)
                                     table[i][j] = seq[i];
                             }
                             break;
@@ -419,7 +428,12 @@ void illustrate_OPT(int *seq, int f, int n)
             if (table[i][j] != EMPTY_PAGE) cout << table[i][j] << "\t";
             else cout << "-\t";
         }
-        cout<<page_fault[i]<<endl;
+        cout << page_fault[i] << endl;
     }
-    cout<<"The number of pagefaults: "<<no_pagefaults;
+    cout << "The number of pagefaults: " << no_pagefaults;
+
+    for (int i = 0; i < f; i++)
+        delete[] table[i];
+    delete[] table;
+    delete[] page_fault;
 }
