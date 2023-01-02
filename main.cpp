@@ -73,7 +73,7 @@ int main()
         illustrate_FIFO(seq, no_frames, no_pages);
         
         clock_t endT = clock(); // end time
-        cout << "\nTime executing the given test with FIFO: " << ((double)endT - startT)/CLOCKS_PER_SEC ;
+        cout << "\nTime executing the given test with FIFO: " << ((double)endT - startT)/CLOCKS_PER_SEC << "seconds" ;
 
     }
     else if (choice == OPT_CHOICE)
@@ -84,18 +84,18 @@ int main()
         illustrate_OPT(seq, no_frames, no_pages);
         
         clock_t endT = clock(); // end time
-        cout << "\nTime executing the given test with OPT: " << ((double)endT - startT)/CLOCKS_PER_SEC ;
+        cout << "\nTime executing the given test with OPT: " << ((double)endT - startT)/CLOCKS_PER_SEC << "seconds" ;
 
     }
     else if (choice == LRU_CHOICE)
     {
         // benchmark 
         clock_t startT = clock(); // start time
-        
+
         illustrate_LRU(seq, no_frames, no_pages);
 
         clock_t endT = clock(); // end time
-        cout << "\nTime executing the given test with LRU: " << ((double)endT - startT)/CLOCKS_PER_SEC ;
+        cout << "\nTime executing the given test with LRU: " << ((double)endT - startT)/CLOCKS_PER_SEC << "seconds" ;
     }
     return 0;
 }
