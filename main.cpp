@@ -110,7 +110,7 @@ int* manual_input()
     } while (no_pages < 0);
 
     // input sequence number
-    cout << "\nInput reference sequence: ";
+    cout << "\nInput reference sequence (each page is separated by a space ' '): ";
     int *seq = new int[no_pages];
     float temp; 
     for (int i = 0; i < no_pages; i++)
