@@ -7,9 +7,10 @@
 #include <iostream>
 #include <cstdlib>
 #include <cmath>
+#include <ctime> // for benchmark
 using namespace std;
 
-#define EMPTY_FRAME -1
+#define EMPTY_PAGE -1
 
 int no_frames = 0; // number of frames
 int no_pages = 0; // number of pages in the sequence 
@@ -66,15 +67,35 @@ int main()
         cout << seq[i] << " ";
     if (choice == FIFO_CHOICE)
     {
+        // benchmark
+        clock_t startT = clock(); // start time
+
         illustrate_FIFO(seq, no_frames, no_pages);
+        
+        clock_t endT = clock(); // end time
+        cout << "\nTime executing the given test with FIFO: " << ((double)endT - startT)/CLOCKS_PER_SEC ;
+
     }
     else if (choice == OPT_CHOICE)
     {
+        // benchmark
+        clock_t startT = clock(); // start time
+
         illustrate_OPT(seq, no_frames, no_pages);
+        
+        clock_t endT = clock(); // end time
+        cout << "\nTime executing the given test with OPT: " << ((double)endT - startT)/CLOCKS_PER_SEC ;
+
     }
     else if (choice == LRU_CHOICE)
     {
+        // benchmark 
+        clock_t startT = clock(); // start time
+        
         illustrate_LRU(seq, no_frames, no_pages);
+
+        clock_t endT = clock(); // end time
+        cout << "\nTime executing the given test with LRU: " << ((double)endT - startT)/CLOCKS_PER_SEC ;
     }
     return 0;
 }
@@ -89,7 +110,7 @@ int* manual_input()
     } while (no_pages < 0);
 
     // input sequence number
-    cout << "\nInput pages: ";
+    cout << "\nInput reference sequence: ";
     int *seq = new int[no_pages];
     float temp; 
     for (int i = 0; i < no_pages; i++)
@@ -155,7 +176,7 @@ void illustrate_FIFO(int *Seq, int frames, int pages)
     int temp[frames];
     int pagefaults = 0, index = 0;
     // initialize 
-    for (int i = 0; i < frames; i++) temp[i] = EMPTY_FRAME;
+    for (int i = 0; i < frames; i++) temp[i] = EMPTY_PAGE;
 
     // computing and printing 
     cout<<"Page\t";
@@ -183,7 +204,7 @@ void illustrate_FIFO(int *Seq, int frames, int pages)
         cout << Seq[i] << "\t";
         for (int i = 0; i < frames; i++)
         {
-            if (temp[i] != EMPTY_FRAME) cout << temp[i] << "\t";
+            if (temp[i] != EMPTY_PAGE) cout << temp[i] << "\t";
             else cout << "-\t";
         }
         if (check) cout << "Yes" << endl;
@@ -203,7 +224,7 @@ void illustrate_LRU(int *Seq, int frames, int pages)
     // initialize 
     for (int i = 0; i < frames; i++)
     {
-        temp[i] = EMPTY_FRAME;
+        temp[i] = EMPTY_PAGE;
         state[i] = -1;
     }
 
@@ -240,7 +261,7 @@ void illustrate_LRU(int *Seq, int frames, int pages)
         else for (int j = 0; j < frames; j++) if (temp[j] == Seq[i]) state[j] = i;
         for (int i = 0; i < frames; i++)
         {
-            if (temp[i] != EMPTY_FRAME) cout << temp[i] << "\t";
+            if (temp[i] != EMPTY_PAGE) cout << temp[i] << "\t";
             else cout << "-\t";
         }
         if (check) cout<<"Yes"<<endl;
