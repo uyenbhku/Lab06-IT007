@@ -18,7 +18,7 @@ int no_pages = 0; // number of pages in the sequence
 int* manual_input();
 int* create_default_seq();
 void illustrate_FIFO(int *Seq, int frames, int pages);
-void illustrate_OPT(int *Seq, int frames, int pages);
+void illustrate_OPT(int *seq, int f, int n);
 void illustrate_LRU(int *Seq, int frames, int pages);
 
 int main()
@@ -271,7 +271,155 @@ void illustrate_LRU(int *Seq, int frames, int pages)
 }
 
 
-void illustrate_OPT(int *Seq, int frames, int pages)
+// @author: Nguyen Thi Thuy
+void illustrate_OPT(int *seq, int f, int n)
 {
     cout << "\nOPT algorithm\n";
+
+    // Tao mang 2 chieu = -1
+    int **table = new int*[n];
+    for(int i = 0; i < n; i++)
+    {
+        table[i] = new int[f];
+    }
+    // initialize
+    for(int i = 0; i<n;i++)
+    {
+        for(int j = 0; j < f; j++)
+        {
+            table[i][j] = EMPTY_PAGE;
+        }
+    }
+
+    string *page_fault = new string[n] ;// Co loi trang hay khong: Y or N
+
+    // computing and printing 
+    cout<<"Page\t";
+    for (int i = 0; i < f; i++)
+    {
+        cout<<"Frame "<<i+1<<"\t";
+    }
+    cout<<"Page Fault"<<endl;
+
+    int i = 0;
+    table[0][i] = seq[i];
+    page_fault[i] = "Yes";
+
+    cout << seq[i] << "\t";
+    for (int j = 0; j < f; j++)
+    {
+        if (table[i][j] != EMPTY_PAGE) cout << table[i][j] << "\t";
+        else cout << "-\t";
+    }
+    cout<<page_fault[i]<<endl;
+
+    int no_pagefaults = 1; // dem so page faults
+
+    int count_first = 1; // xu ly K frames dau tien
+    for(i=i+1; i < n; i++)
+    {
+        bool flag = true ;// kiem tra co xay ra loi trang hay khong
+        for(int j = 0; j < f; j++)
+        {
+            if(table[i-1][j] == seq[i])
+            {
+                flag = false;
+                break;
+            }
+        }
+
+        if(flag == false) // khong xay ra loi trang thi sao chep cot cua table
+        {
+            for(int j = 0; j < f; j++)
+            {
+                table[i][j] = table[i-1][j];
+            }
+            page_fault[i] = "No";
+
+        }
+        else // co xay ra loi trang
+        {
+            page_fault[i] = "Yes";
+            no_pagefaults++; // cap nhat so page faults 
+            
+            if (count_first < f) // khong can thay the trang
+            {
+                table[i][count_first] = seq[i];
+                for(int j = 0; j < count_first; j++)
+                {
+                    table[i][j] = table[i-1][j];
+                }
+                count_first++;
+            }
+            else // Phai thay the trang
+            {
+                bool flag1;  // kiem tra table[i-1][j] co duoc su dung trong tuong lai khong
+                for(int j = 0; j < f; j++)
+                {
+                    flag1 = false;
+                    for(int k = i+1; k<n;k++)
+                    {
+                        if(seq[k] == table[i-1][j])
+                        {
+                            flag1 = true;
+                            break;
+                        }
+                    }
+                    if (flag1 == false) // khoong dung trong tuong lai nua thi chon trang nay de thay
+                    {
+                        for(int l = 0; l < f; l++) // giu nguyen cac trang con lai
+                        {
+                            table[i][l] = table[i-1][l];
+                        }
+                        table[i][j] = seq[i];
+                        break;
+                    }
+                }
+
+                if(flag1 == true) // flag1 = false chung to chua thay trang (vi all cac page deu duoc su dung trong tuong lai,
+                        // di kiem page lau duoc su dung nhat
+                {
+                    for(int k = i+1; k<n;k++)
+                    {
+                        int count = 0;
+                        for(int j = 0; j<f; j++)
+                        {
+                            if(table[i][j] == EMPTY_PAGE) count++;
+                        }
+                        if(count > 1)
+                        {
+                            for(int j = 0; j<f; j++)
+                            {
+                                if(table[i-1][j] == seq[k])
+                                {
+                                    table[i][j] = seq[k];
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            for(int j = 0; j<f; j++)
+                            {
+                                cout << table[i][j];
+                                if(table[i][j] == EMPTY_PAGE)
+                                    table[i][j] = seq[i];
+                            }
+                            break;
+                        }
+                    }
+                }
+
+            }
+        }
+
+        cout << seq[i] << "\t";
+        for (int j = 0; j < f; j++)
+        {
+            if (table[i][j] != EMPTY_PAGE) cout << table[i][j] << "\t";
+            else cout << "-\t";
+        }
+        cout<<page_fault[i]<<endl;
+    }
+    cout<<"The number of pagefaults: "<<no_pagefaults;
 }
