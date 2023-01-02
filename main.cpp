@@ -159,7 +159,7 @@ int* create_default_seq()
         // handle invalid digit
         if (ctoi_value < 0 || ctoi_value > 9) // not a number 
         {
-            cout << "\nError: Invalid digit, cannot convert char '" << studentID[i] << "' to int. End parsing...";
+            cout << "\nError: Invalid digit, cannot convert char '" << studentID[i] << "' to int. \nEnd parsing.......";
             no_pages = i; // update new number of pages at where the error happened 
             cout << "\nNew number of pages: " << no_pages << endl;
             break; // end parsing at the time error happened 
@@ -311,7 +311,7 @@ void illustrate_OPT(int* seq, int f, int n)
     cout << "Page Fault" << endl;
 
     int i = 0;
-    table[0][i] = seq[i];
+    table[i][0] = seq[i];
     page_fault[i] = "Yes";
 
     cout << seq[i] << "\t";
