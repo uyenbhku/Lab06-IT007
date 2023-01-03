@@ -410,7 +410,6 @@ void illustrate_OPT(int* seq, int f, int n)
                         {
                             for (int j = 0; j < f; j++)
                             {
-                                cout << table[i][j];
                                 if (table[i][j] == EMPTY_PAGE)
                                     table[i][j] = seq[i];
                             }
