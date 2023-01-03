@@ -119,7 +119,6 @@ int main()
                         {
                             for(int j = 0; j<f; j++)
                             {
-                                cout << table[i][j];
                                 if(table[i][j] == -1)
                                     table[i][j] = seq[i];
                             }
