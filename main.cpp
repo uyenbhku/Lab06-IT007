@@ -246,25 +246,27 @@ void illustrate_LRU(int* Seq, int frames, int pages)
         cout << Seq[i] << "\t";
         int t = 0;
         bool check = false;
-        for (int j = 0; j < frames; j++) if (Seq[i] == temp[j]) t++;
-        if (t == 0)
+        for (int j = 0; j < frames; j++) 
         {
-            if (pagefaults < frames)
+            if (Seq[i] == temp[j]) 
             {
-                temp[index] = Seq[i];
-                state[index++] = i;
+                state[j] = i;
+                t++;
             }
-            else
-            {
-                int min = 0;
-                for (int j = 0; j < frames; j++) if (state[j] < state[min]) min = j;
-                temp[min] = Seq[i];
-                state[min] = i;
-            }
+        }
+        if (t == 0)
+        {            
+            int min = 0;
+            for (int j = 0; j < frames; j++)
+                if (state[j] < state[min])
+                    min = j;
+            temp[min] = Seq[i];
+            state[min] = i;
+        
             check = true;
             pagefaults++;
         }
-        else for (int j = 0; j < frames; j++) if (temp[j] == Seq[i]) state[j] = i;
+
         for (int i = 0; i < frames; i++)
         {
             if (temp[i] != EMPTY_PAGE) cout << temp[i] << "\t";
