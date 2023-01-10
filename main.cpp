@@ -286,7 +286,11 @@ void illustrate_LRU(int* Seq, int frames, int pages)
 void illustrate_OPT(int* seq, int f, int n)
 {
     cout << "\nOPT algorithm\n";
-
+    if (n == 0) 
+    {
+        cout << "\nNo reference page\n";
+        return;
+    }
     // Tao mang 2 chieu = -1
     int** table = new int* [n];
     for (int i = 0; i < n; i++)
